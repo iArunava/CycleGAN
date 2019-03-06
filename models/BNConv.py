@@ -50,6 +50,7 @@ class BNConv(nn.Module):
         - The output of the network BNConv
         '''
 
-        x = self.main(x)
+        for layer in self.main:
+            x = layer(x)
 
         return x
