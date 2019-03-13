@@ -16,7 +16,9 @@ class Discriminator(nn.Module):
                                               kernel_size=4,
                                               stride=2,
                                               padding=1,
-                                              bias=False)
+                                              bias=False),
+                                    
+                                 nn.LeakyReLU(negative_slope=0.2)
                                 ])
 
         layers -= 1
@@ -39,10 +41,12 @@ class Discriminator(nn.Module):
                                   kernel_size=2,
                                   stride=1,
                                   padding=0,
-                                  bias=False))
+                                  bias=False)
 
 
     def forward(self, x):
         
-        out = self.net(x)
-        return out
+        for layer in self.net:
+            x = layer(x)
+
+        return x

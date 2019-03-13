@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+from torchvision import datasets, transforms
 
 from models import Discriminator
 from models import Generator
@@ -21,29 +22,39 @@ def train(FLAGS):
     show_in_iter = FLAGS.show_in_iter
     show_every = FLAGS.show_every
     save_every = FLAGS.save_every
+    x_path = FLAGS.x_path
+    y_path = FLAGS.y_path
     
     # Get the data
 
     # Define the Loader
-    #dataloader
-    #evalloader = 
+    transform = transforms.Compose([transforms.ToTensor(),
+                                    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                         std=[0.229, 0.224, 0.225])
+                                   ])
+
+    x_data = datasets.ImageFolder('./summer2winter_yosemite/summer/', transform=transform)
+    xloader = dataloader.DataLoader(x_data, batch_size=batch_size, shuffle=True)
+
+    y_data = datasets.ImageFolder('./summer2winter_yosemite/winter/', transform=transform)
+    yloader = dataloader.DataLoader(y_data, batch_size=batch_size, shuffle=True)
 
     # Define the model
-    G_X2Y = CycleGAN()
-    G_Y2X = CycleGAN()
-    D_X = Discriminator()
-    D_Y = Discriminator()
+    G_X2Y = CycleGAN().to(device)
+    G_Y2X = CycleGAN().to(device)
+    D_X = Discriminator().to(device)
+    D_Y = Discriminator().to(device)
     
     # Define the Loss
     if l_type == 'mse':
         criterion = nn.MSELoss()
-    else l_type == 'l1':
+    elif l_type == 'l1':
         criterion = nn.L1Loss()
     cycle_c = nn.L1Loss()
     
     # Define the Optimizer
-    opt_G = optim.Adam(itertools.chain(G_X2Y.parameters(), G_Y2X.parameters()), lr=g_lr, weight_decay=5e-4)
-    opt_D = optim.Adam(itertools.chain(D_X.parameters(), D_Y.parameters()), lr=d_lr, weight_decay=5e-4)
+    opt_G = optim.Adam(itertools.chain(G_X2Y.parameters(), G_Y2X.parameters()), lr=g_lr, weight_decay=5e-4, betas=(beta1, beta2))
+    opt_D = optim.Adam(itertools.chain(D_X.parameters(), D_Y.parameters()), lr=d_lr, weight_decay=5e-4, betas=(beta1, beta2))
     
     # Load the pretrained weights (if)
     if resume:
