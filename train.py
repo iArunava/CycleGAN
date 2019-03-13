@@ -19,6 +19,10 @@ def train(FLAGS):
     g_lr = FLAGS.g_lr
     lamb = FLAGS.lamb
     show_in_iter = FLAGS.show_in_iter
+    show_every = FLAGS.show_every
+    save_every = FLAGS.save_every
+    
+    # Get the data
 
     # Define the Loader
     #dataloader
@@ -60,9 +64,10 @@ def train(FLAGS):
     for epoch in range(1, epcohs+1):
 
         # # Define the train loop
-        for x_data, y_data in dataloader:
+        for ii, data in enumerate(dataloader):
     
             # # # Read the data
+            x_data, y_data = data
             x_data, y_data = x_data.to(device), y_data.to(device)
 
             # # # zero grad
@@ -103,10 +108,22 @@ def train(FLAGS):
             opt_D.step()
 
             # # # Show (if)
-            if show_in_iter:
+            if show_in_iter and ii % show_every == 0:
                 show(G_X2Y, G_Y2X, evalloader)
 
     # # Show in some interval
+    if epoch % show_every == 0:
+        show(G_X2Y, G_Y2X, evalloader)
+
+    # # Save in some interval
+    if epoch % save_every == 0:
+        ckpt = {'g_x2y_state_dict' : G_X2Y.state_dict(),
+                'g_y2x_state_dict' : G_Y2X.state_dict(),
+                'd_y_state_dict' : D_Y.state_dict(),
+                'd_x_state_dict' : D_X.state_dict()
+                }
+        torch.save(ckpt, 'ckpt-{}.pth'.format(epoch))
+    
     
 
 def show(g_x2y, g_y2x, loader):
