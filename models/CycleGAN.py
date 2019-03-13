@@ -20,24 +20,21 @@ class CycleGAN(nn.Module):
                                 kernel_size=9,
                                 padding=4,
                                 stride=1,
-                                conv_first=True,
-                                relu=True),
+                                conv_first=True),
 
                         BNConv(in_channels=ic_conv,
                                 out_channels=ic_conv*2,
                                 kernel_size=3,
                                 padding=1,
                                 stride=2,
-                                conv_first=True,
-                                relu=True),
+                                conv_first=True),
 
                         BNConv(in_channels=ic_conv*2,
                                 out_channels=ic_conv*4,
                                 kernel_size=3,
                                 padding=1,
                                 stride=2,
-                                conv_first=True,
-                                relu=True),
+                                conv_first=True),
 
                         ResidualBlock2L(ic_conv=ic_conv*4,
                                         oc_conv=ic_conv*4,
@@ -74,24 +71,21 @@ class CycleGAN(nn.Module):
                                 kernel_size=3,
                                 padding=1,
                                 stride=2,
-                                conv_first=True,
-                                relu=True),
+                                conv_first=True),
 
                         BNConvt(in_channels=ic_conv*2,
                                 out_channels=ic_conv,
                                 kernel_size=3,
                                 padding=1,
                                 stride=2,
-                                conv_first=True,
-                                relu=True),
+                                conv_first=True),
 
                         BNConvt(in_channels=ic_conv,
                                 out_channels=3,
                                 kernel_size=9,
                                 padding=4,
                                 stride=1,
-                                conv_first=True,
-                                relu=True)
+                                conv_first=True)
             )
 
 
