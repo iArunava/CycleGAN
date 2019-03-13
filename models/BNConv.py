@@ -49,7 +49,7 @@ class BNConv(nn.Module):
             if relu == 'relu':
                 self.main.insert(0, nn.ReLU(inplace=True))
             elif relu == 'leaky':
-                self.main.insert(0, nn.LeakyReLU(negative_slope=nslope, inplace=True)
+                self.main.insert(0, nn.LeakyReLU(negative_slope=nslope, inplace=True))
 
 
     def forward(self, x):

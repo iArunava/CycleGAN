@@ -39,7 +39,7 @@ class Discriminator(nn.Module):
                                   kernel_size=2,
                                   stride=1,
                                   padding=0,
-                                  bias=False)
+                                  bias=False))
 
 
     def forward(self, x):
