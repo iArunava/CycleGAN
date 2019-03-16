@@ -52,7 +52,7 @@ class ImagePool(object):
                 # Add the current image to pool
                 if p2 < 0.6:
                     ridx = np.random.randint(0, self.pool_size)
-                    self.pool_size[ridx] = image
+                    self.pool[ridx] = image
         
         to_return = torch.cat(to_return, dim=0)
         return to_return
