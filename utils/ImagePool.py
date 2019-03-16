@@ -16,7 +16,7 @@ class ImagePool(object):
 
     def __init__(self, pool_size):
         
-        self.pool_size pool_size
+        self.pool_size = pool_size
         self.pool = []
 
     def sample(self, images):
@@ -26,9 +26,10 @@ class ImagePool(object):
         
         to_return = []
         for image in images:
+            print (image.shape)
             if len(self.pool) < self.pool_size:
                 self.pool.append(image.cpu())
-                to_return.append(image)
+                to_return.append(image.unsqueeze(0))
             
             else:
                 # p1 is the probability to should the current image
@@ -43,15 +44,15 @@ class ImagePool(object):
                 # Sample from existing images
                 if p1 < 0.5:
                     ridx = np.random.randint(0, self.pool_size)
-                    to_return.append(self.pool[ridx])
+                    to_return.append(self.pool[ridx].unsqueeze(0))
                 else:
-                    to_return.append(image)
+                    to_return.append(image.unsqueeze(0))
 
                 # If the p < 0.6
                 # Add the current image to pool
                 if p2 < 0.6:
                     ridx = np.random.randint(0, self.pool_size)
                     self.pool_size[ridx] = image
-
+        
+        to_return = torch.cat(to_return, dim=0)
         return to_return
-
